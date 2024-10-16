@@ -53,6 +53,7 @@ export function SpanDuration(props: SpanDurationProps) {
         style={{
           left: `${relativeStart * 100}%`,
           width: `${relativeDuration * 100}%`,
+          minWidth: '2px',
           backgroundColor: getSpanColor(muiTheme, chartsTheme, options.visual?.palette?.mode, span),
         }}
       />
@@ -61,13 +62,21 @@ export function SpanDuration(props: SpanDurationProps) {
           position: 'absolute',
           top: '50%',
           transform: 'translateY(-50%)',
-          marginLeft: '8px',
+          padding: '0 8px',
           color: muiTheme.palette.grey[700],
           fontSize: '.7rem',
         }}
-        style={{
-          left: `${(relativeStart + relativeDuration) * 100}%`,
-        }}
+        style={
+          /* print span duration on right side of the span bar, if there is space */
+          relativeStart + relativeDuration < 0.95
+            ? {
+                left: `${(relativeStart + relativeDuration) * 100}%`,
+              }
+            : {
+                left: `${relativeStart * 100}%`,
+                transform: 'translateY(-50%) translateX(-100%)',
+              }
+        }
       >
         {formatDuration(spanDuration)}
       </Box>

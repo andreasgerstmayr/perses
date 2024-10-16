@@ -14,6 +14,7 @@
 import { PanelProps, useDataQueries } from '@perses-dev/plugin-system';
 import { LoadingOverlay, NoDataOverlay, TextOverlay, useChartsTheme } from '@perses-dev/components';
 import { Box } from '@mui/material';
+import { MOCK_TRACE_ASYNC } from '../../test';
 import { TracingGanttChartOptions } from './gantt-chart-model';
 import { TracingGanttChart } from './TracingGanttChart/TracingGanttChart';
 import { AttributeLinks } from './TracingGanttChart/DetailPane/Attributes';
@@ -48,14 +49,14 @@ export function TracingGanttChartPanel(props: TracingGanttChartPanelProps) {
     throw queryError.error;
   }
 
-  const trace = queryResults[0]?.data?.trace;
+  const trace = MOCK_TRACE_ASYNC; //queryResults[0]?.data?.trace;
   if (!trace) {
     return <NoDataOverlay resource="trace" />;
   }
 
   return (
     <Box sx={{ height: '100%', padding: `${contentPadding}px` }}>
-      <TracingGanttChart options={spec} attributeLinks={attributeLinks} rootSpan={trace.rootSpan} />
+      <TracingGanttChart options={spec} attributeLinks={attributeLinks} trace={trace} />
     </Box>
   );
 }
