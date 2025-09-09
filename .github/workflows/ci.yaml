@@ -46,9 +46,25 @@ jobs:
       - name: Install UI deps
         working-directory: ./ui
         run: npm ci
+
       - name: Build the app and all packages
         working-directory: ./ui
         run: npm run build
+
+      - name: Check dependency versions
+        run: |
+          # Try installing with React 17
+          cd $(mktemp -d)
+          npm i --save \
+            @perses-dev/components @perses-dev/plugin-system @perses-dev/timeseries-chart-plugin @perses-dev/prometheus-plugin @perses-dev/dashboards \
+            @tanstack/react-query @mui/material @emotion/styled @hookform/resolvers \
+            react@17 react-dom@17 react-router@5 react-router-dom@5 | tee out.log
+          if grep -q warn out.log; then
+            echo "Dependency conflict:"
+            cat out.log
+            exit 1
+          fi
+
       - name: store react production build
         uses: actions/upload-artifact@v4
         with:
